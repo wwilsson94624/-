@@ -1,0 +1,89 @@
+body {
+    margin: 0; /* 移除預設的外邊距，讓頁面內容貼齊邊框 */
+    font-family: Arial, sans-serif; /* 設定全站字體為 Arial 或 sans-serif */
+}
+header {
+    display: flex; /* 將 header 設定為彈性容器，方便內容排列 */
+    align-items: center; /* 垂直置中 header 的內容 */
+    background-color: #003366; /* 設定 header 的背景顏色 */
+    color: white; /* 設定文字顏色為白色 */
+    padding: 10px 20px; /* 設定 header 的內邊距，上下 10px，左右 20px */
+    position: fixed; /* 固定 header 於頁面頂部 */
+    top: 0; /* 將 header 置於頁面最頂部 */
+    width: 100%; /* 設定 header 寬度為 100% */
+    z-index: 1000; /* 確保 header 層級高於其他元素 */
+}
+header img {
+    height: 50px; /* 設定 LOGO 的高度為 50px */
+}
+nav {
+    display: flex; /* 將導航列設為彈性容器，方便排列連結 */
+    gap: 20px; /* 連結之間保持 20px 的間距 */
+    margin-left: auto; /* 將導航列推到 header 的最右邊 */
+    margin-right: 40px; /* 與頁面右邊保持 40px 的距離 */
+}
+nav a {
+    color: white; /* 設定連結文字顏色為白色 */
+    text-decoration: none; /* 移除文字底線 */
+    font-size: 18px; /* 設定文字大小為 18px */
+    background-color: #00509e; /* 設定按鈕的背景顏色 */
+    padding: 10px 15px; /* 設定按鈕的內邊距，上下 10px，左右 15px */
+    border-radius: 20px; /* 設定按鈕的圓角半徑為 20px */
+    transition: background-color 0.3s ease; /* 加入背景色變化的過渡效果 */
+}
+nav a:hover {
+    background-color: #0073e6; /* 滑鼠懸停時按鈕背景色變為較亮的藍色 */
+}
+main {
+    margin-top: 80px; /* 確保內容區與固定的 header 保持間距 */
+    padding: 20px; /* 設定內容區的內邊距為 20px */
+    text-align: center; /* 設定文字置中 */
+}
+.carousel {
+    position: relative; /* 設置輪播區域為相對定位 */
+    width: 60%; /* 設定輪播區域寬度為頁面寬度的 60% */
+    margin: 0 auto; /* 將輪播區域置中 */
+    overflow: hidden; /* 隱藏超出範圍的內容 */
+    border-radius: 10px; /* 為輪播區域設置圓角 */
+}
+.carousel img {
+    width: 100%; /* 圖片填滿輪播區域寬度 */
+    display: none; /* 預設隱藏所有圖片 */
+}
+.carousel img.active {
+    display: block; /* 僅顯示當前圖片 */
+}
+.carousel button {
+    position: absolute; /* 設置按鈕為絕對定位 */
+    top: 50%; /* 將按鈕置於輪播區域的垂直中間 */
+    transform: translateY(-50%); /* 調整按鈕位置使其垂直居中 */
+    background-color: rgba(0, 0, 0, 0.5); /* 設定按鈕背景顏色並帶有透明度 */
+    color: white; /* 設定按鈕文字顏色 */
+    border: none; /* 移除按鈕邊框 */
+    padding: 10px; /* 設定按鈕內邊距 */
+    cursor: pointer; /* 設定滑鼠懸停時顯示手型指標 */
+    border-radius: 5px; /* 設定按鈕的圓角 */
+}
+.carousel button:hover {
+    background-color: rgba(0, 0, 0, 0.7); /* 滑鼠懸停時按鈕背景變深 */
+}
+.carousel .prev {
+    left: 10px; /* 將左按鈕放置於輪播區域左側 */
+}
+.carousel .next {
+    right: 10px; /* 將右按鈕放置於輪播區域右側 */
+}
+.intro {
+    margin-top: 40px; /* 與上方內容保持 40px 的距離 */
+    text-align: left; /* 設定文字靠左對齊 */
+    padding: 20px; /* 設定區塊內邊距為 20px */
+    background-color: #f4f4f4; /* 設定背景顏色為淺灰色 */
+    border-radius: 10px; /* 區塊邊角設定為圓角 */
+}
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column; /* 將導航列改為垂直排列 */
+        align-items: flex-end; /* 將連結靠右對齊 */
+        margin-right: 0; /* 去除右側額外的邊距 */
+    }
+}
