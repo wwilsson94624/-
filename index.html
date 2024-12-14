@@ -1,59 +1,62 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>資工系學會介紹</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+
+    <script>
+      // 設定圖片輪播功能
+      let currentIndex = 0;
+      const images = document.querySelectorAll(".carousel img");
+      const prevButton = document.querySelector(".carousel .prev");
+      const nextButton = document.querySelector(".carousel .next");
+
+      function showImage(index) {
+        images[currentIndex].classList.remove("active"); // 隱藏當前圖片
+        currentIndex = (index + images.length) % images.length; // 計算新圖片索引，確保不會超出範圍
+        images[currentIndex].classList.add("active"); // 顯示新圖片
+      }
+
+      function showNextImage() {
+        showImage(currentIndex + 1); // 顯示下一張圖片
+      }
+
+      function showPrevImage() {
+        showImage(currentIndex - 1); // 顯示上一張圖片
+      }
+
+      prevButton.addEventListener("click", showPrevImage); // 點擊左按鈕顯示上一張
+      nextButton.addEventListener("click", showNextImage); // 點擊右按鈕顯示下一張
+
+      setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
+    </script>
+  </head>
+  <body>
     <header>
-        <img src="picture/ntoulogo.png" alt="海洋大學 LOGO">
-        <nav>
-            <a href="index.html">首頁</a>
-            <a href="money.html">財務管理</a>
-            <a href="calendar.html">活動日程</a>
-            <a href="joinus.html">加入我們</a>
-        </nav>
+      <img src="picture/ntoulogo.png" alt="海洋大學 LOGO" />
+      <nav>
+        <a href="index.html">首頁</a>
+        <a href="money.html">財務管理</a>
+        <a href="calendar.html">活動日程</a>
+        <a href="joinus.html">加入我們</a>
+      </nav>
     </header>
     <main>
-        <section class="carousel">
-            <button class="prev">上一張</button>
-            <img src="picture/activity1.jpg" alt="活動照片 1" class="active">
-            <img src="picture/activity2.jpg" alt="活動照片 2">
-            <img src="picture/activity3.jpg" alt="活動照片 3">
-            <button class="next">下一張</button>
-        </section>
-        <section class="intro">
-            <h2>關於資工系學會</h2>
-            <p>歡迎來到海洋大學資工系學會介紹網站！我們的學會致力於舉辦豐富多彩的活動，為學生們提供學術和生活上的支持。我們的目標是創造一個充滿活力和凝聚力的學術社群。</p>
-        </section>
+      <section class="carousel">
+        <button class="prev">上一張</button>
+        <img src="picture/activity1.jpg" alt="活動照片 1" class="active" />
+        <img src="picture/activity2.jpg" alt="活動照片 2" />
+        <img src="picture/activity3.jpg" alt="活動照片 3" />
+        <button class="next">下一張</button>
+      </section>
+      <section class="intro">
+        <h2>關於資工系學會</h2>
+        <p>
+          歡迎來到海洋大學資工系學會介紹網站！我們的學會致力於舉辦豐富多彩的活動，為學生們提供學術和生活上的支持。我們的目標是創造一個充滿活力和凝聚力的學術社群。
+        </p>
+      </section>
     </main>
-    <script>
-        // 設定圖片輪播功能
-        let currentIndex = 0;
-        const images = document.querySelectorAll('.carousel img');
-        const prevButton = document.querySelector('.carousel .prev');
-        const nextButton = document.querySelector('.carousel .next');
-
-        function showImage(index) {
-            images[currentIndex].classList.remove('active'); // 隱藏當前圖片
-            currentIndex = (index + images.length) % images.length; // 計算新圖片索引，確保不會超出範圍
-            images[currentIndex].classList.add('active'); // 顯示新圖片
-        }
-
-        function showNextImage() {
-            showImage(currentIndex + 1); // 顯示下一張圖片
-        }
-
-        function showPrevImage() {
-            showImage(currentIndex - 1); // 顯示上一張圖片
-        }
-
-        prevButton.addEventListener('click', showPrevImage); // 點擊左按鈕顯示上一張
-        nextButton.addEventListener('click', showNextImage); // 點擊右按鈕顯示下一張
-
-        setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
-    </script>
-</body>
+  </body>
 </html>
