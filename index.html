@@ -5,33 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>資工系學會介紹</title>
     <link rel="stylesheet" href="style.css" />
-
-    <script>
-      // 設定圖片輪播功能
-      let currentIndex = 0;
-      const images = document.querySelectorAll(".carousel img");
-      const prevButton = document.querySelector(".carousel .prev");
-      const nextButton = document.querySelector(".carousel .next");
-
-      function showImage(index) {
-        images[currentIndex].classList.remove("active"); // 隱藏當前圖片
-        currentIndex = (index + images.length) % images.length; // 計算新圖片索引，確保不會超出範圍
-        images[currentIndex].classList.add("active"); // 顯示新圖片
-      }
-
-      function showNextImage() {
-        showImage(currentIndex + 1); // 顯示下一張圖片
-      }
-
-      function showPrevImage() {
-        showImage(currentIndex - 1); // 顯示上一張圖片
-      }
-
-      prevButton.addEventListener("click", showPrevImage); // 點擊左按鈕顯示上一張
-      nextButton.addEventListener("click", showNextImage); // 點擊右按鈕顯示下一張
-
-      setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
-    </script>
   </head>
   <body>
     <header>
@@ -58,5 +31,42 @@
         </p>
       </section>
     </main>
+    <script>
+      // 設定圖片輪播功能
+      let currentIndex = 0;
+      const images = document.querySelectorAll(".carousel img");
+      const prevButton = document.querySelector(".carousel .prev");
+      const nextButton = document.querySelector(".carousel .next");
+
+      function showImage(index) {
+        images[currentIndex].classList.remove("active"); // 隱藏當前圖片
+        currentIndex = (index + images.length) % images.length; // 計算新圖片索引，確保不會超出範圍
+        images[currentIndex].classList.add("active"); // 顯示新圖片
+      }
+
+      function showNextImage() {
+        showImage(currentIndex + 1); // 顯示下一張圖片
+      }
+
+      function showPrevImage() {
+        showImage(currentIndex - 1); // 顯示上一張圖片
+      }
+
+      prevButton.addEventListener("click", showPrevImage); // 點擊左按鈕顯示上一張
+      nextButton.addEventListener("click", showNextImage); // 點擊右按鈕顯示下一張
+
+      setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
+    </script>
+
+    <footer>
+      <p>
+        聯絡我們：
+        <a href="mailto:ntoucssa@email.ntou.edu.tw">我們的信箱</a>
+        <a
+          href="https://www.instagram.com/ntou_cse?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+          >ig</a
+        >
+      </p>
+    </footer>
   </body>
 </html>
