@@ -15,14 +15,24 @@ header {
 }
 header img {
   height: 50px; /* 設定 LOGO 的高度為 50px */
+  margin-left: 10px;
 }
-nav {
+header h1 a {
+    color: white; /* 設定連結文字顏色為白色 */
+    text-decoration: none; /* 移除文字底線 */
+    margin: 0 20px; /* 標題與其他內容的間距 */
+    font-size: 24px; /* 設定標題字體大小 */
+    font-weight: bold; /* 設定字體為粗體 */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 加入文字陰影效果 */
+    white-space: nowrap; /* 確保標題單行顯示 */
+}
+header nav {
   display: flex; /* 將導航列設為彈性容器，方便排列連結 */
   gap: 20px; /* 連結之間保持 20px 的間距 */
   margin-left: auto; /* 將導航列推到 header 的最右邊 */
   margin-right: 40px; /* 與頁面右邊保持 40px 的距離 */
 }
-nav a {
+header nav a {
   color: white; /* 設定連結文字顏色為白色 */
   text-decoration: none; /* 移除文字底線 */
   font-size: 18px; /* 設定文字大小為 18px */
@@ -31,7 +41,7 @@ nav a {
   border-radius: 20px; /* 設定按鈕的圓角半徑為 20px */
   transition: background-color 0.3s ease; /* 加入背景色變化的過渡效果 */
 }
-nav a:hover {
+header nav a:hover {
   background-color: #0073e6; /* 滑鼠懸停時按鈕背景色變為較亮的藍色 */
 }
 main {
