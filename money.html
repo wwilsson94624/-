@@ -3,19 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>系學會收支</title>
+    <title>系學會財務管理</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        main {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+        }
+        .table-section {
+            flex: 3; /* 左側 60% */
+        }
+        .form-section {
+            flex: 2; /* 右側 40% */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .form-section label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-section input, .form-section select {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 100%;
+        }
+        .form-section button {
+            padding: 10px 20px;
+            background-color: #00509e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+        .form-section button:hover {
+            background-color: #0073e6;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        table th {
+            background-color: #f4f4f4;
+        }
+        .delete-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .delete-btn:hover {
+            background-color: #ff1a1a;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <img src="picture/ntoulogo.png" alt="海洋大學 LOGO" />
+        <img src="picture/ntoulogo.png" alt="海洋大學 LOGO">
         <h1><a href="index.html">海大資工系學會介紹網站</a></h1>
         <nav>
-          <a href="money.html">財務管理</a>
-          <a href="calendar.html">活動日程</a>
-          <a href="joinus.html">加入我們</a>
+            <a href="money.html">財務管理</a>
+            <a href="calendar.html">活動日程</a>
+            <a href="joinus.html">加入我們</a>
         </nav>
-      </header>
-    
+    </header>
+    <main>
+        <!-- 左側：表格 -->
+        <section class="table-section">
+            <h2>財務紀錄</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>時間</th>
+                        <th>品項</th>
+                        <th>金額</th>
+                        <th>餘額</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- 動態生成數據 -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 右側：表單 -->
+        <section class="form-section">
+            <h2>新增紀錄</h2>
+            <label for="date">時間：</label>
+            <input type="date" id="date">
+            
+            <label for="item">品項：</label>
+            <input type="text" id="item" placeholder="請輸入品項">
+            
+            <label for="amount">金額：</label>
+            <input type="number" id="amount" placeholder="請輸入金額">
+            
+            <label for="type">類型：</label>
+            <select id="type">
+                <option value="income">收入</option>
+                <option value="expense">支出</option>
+            </select>
+            
+            <button id="add-btn">新增數據</button>
+        </section>
+    </main>
+    <script>
+        let balance = 0; // 初始餘額
+        const tableBody = document.getElementById('table-body');
+        const addButton = document.getElementById('add-btn');
+
+        // 新增數據
+        addButton.addEventListener('click', () => {
+            const date = document.getElementById('date').value;
+            const item = document.getElementById('item').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const type = document.getElementById('type').value;
+
+            if (!date || !item || isNaN(amount)) {
+                alert('請填寫所有欄位！');
+                return;
+            }
+
+            const row = document.createElement('tr');
+
+            // 更新餘額
+            const adjustedAmount = type === 'income' ? amount : -amount;
+            balance += adjustedAmount;
+
+            row.innerHTML = `
+                <td>${date}</td>
+                <td>${item}</td>
+                <td>${type === 'income' ? '+' : '-'}${Math.abs(amount).toFixed(2)}</td>
+                <td>${balance.toFixed(2)}</td>
+                <td><button class="delete-btn">刪除</button></td>
+            `;
+
+            // 刪除按鈕功能
+            row.querySelector('.delete-btn').addEventListener('click', () => {
+                balance -= adjustedAmount; // 還原餘額
+                row.remove(); // 刪除行
+            });
+
+            tableBody.appendChild(row);
+
+            // 清空輸入欄位
+            document.getElementById('date').value = '';
+            document.getElementById('item').value = '';
+            document.getElementById('amount').value = '';
+        });
+    </script>
 </body>
 </html>
