@@ -1,21 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>系學會活動日程</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://apis.google.com/js/api.js"></script>
+  </head>
+  <body>
     <header>
-        <img src="picture/ntoulogo.png" alt="海洋大學 LOGO" />
-        <h1><a href="index.html">海大資工系學會介紹網站</a></h1>
-        <nav>
-          <a href="money.html">財務管理</a>
-          <a href="calendar.html">活動日程</a>
-          <a href="joinus.html">加入我們</a>
-        </nav>
-      </header>
-    
-</body>
+      <img src="picture/ntoulogo.png" alt="海洋大學 LOGO" />
+      <h1><a href="index.html">海大資工系學會介紹網站</a></h1>
+      <nav>
+        <a href="money.html">財務管理</a>
+        <a href="calendar.html">活動日程</a>
+        <a href="joinus.html">加入我們</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>系學會活動日程</h1>
+      <!-- 嵌入 Google 行事曆 -->
+      <iframe
+        src="https://calendar.google.com/calendar/embed?src=ntoucssa%40email.ntou.edu.tw&ctz=Asia%2FTaipei"
+        style="border: 0; width: 100%; max-width: 800px; height: 600px"
+        frameborder="0"
+        scrolling="no"
+      ></iframe>
+
+      <section>
+        <h2>新增活動到行事曆</h2>
+        <form id="eventForm">
+          <label for="eventTitle">事件標題：</label>
+          <input
+            type="text"
+            id="eventTitle"
+            name="eventTitle"
+            required
+          /><br /><br />
+
+          <label for="eventDate">日期：</label>
+          <input
+            type="date"
+            id="eventDate"
+            name="eventDate"
+            required
+          /><br /><br />
+
+          <label for="eventTime">時間：</label>
+          <input
+            type="time"
+            id="eventTime"
+            name="eventTime"
+            required
+          /><br /><br />
+
+          <button type="button" id="authorizeButton">登入 Google</button>
+          <button type="button" id="submitButton" disabled>新增事件</button>
+        </form>
+
+        <script>
+          let gapiLoaded = false;
+
+          // 載入 Google API
+          function loadGapi() {
+            gapi.load("client:auth2", async () => {
+              await gapi.client.init({
+                apiKey: "你的API金鑰",
+                clientId: "你的用戶端ID.apps.googleusercontent.com",
+                discoveryDocs: [
+                  "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
+                ],
+                scope: "https://www.googleapis.com/auth/calendar.events",
+              });
+              gapiLoaded = true;
+              document.getElementById("authorizeButton").disabled = false;
+            });
+          }
+
+          // 登入 Google 帳戶
+          async function authorize() {
+            if (!gapiLoaded) return;
+            await gapi.auth2.getAuthInstance().signIn();
+            document.getElementById("submitButton").disabled = false;
+          }
+
+          // 新增事件
+          async function addEvent() {
+            const eventTitle = document.getElementById("eventTitle").value;
+            const eventDate = document.getElementById("eventDate").value;
+            const eventTime = document.getElementById("eventTime").value;
+
+            const event = {
+              summary: eventTitle,
+              start: {
+                dateTime: `${eventDate}T${eventTime}:00`,
+                timeZone: "Asia/Taipei",
+              },
+              end: {
+                dateTime: `${eventDate}T${eventTime}:00`,
+                timeZone: "Asia/Taipei",
+              },
+            };
+
+            try {
+              const response = await gapi.client.calendar.events.insert({
+                calendarId: "primary",
+                resource: event,
+              });
+              alert("事件新增成功！");
+              console.log(response);
+            } catch (error) {
+              alert("新增事件時發生錯誤！");
+              console.error(error);
+            }
+          }
+
+          // 綁定事件
+          document
+            .getElementById("authorizeButton")
+            .addEventListener("click", authorize);
+          document
+            .getElementById("submitButton")
+            .addEventListener("click", addEvent);
+
+          // 載入 API
+          loadGapi();
+        </script>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 海大資工系學會. All Rights Reserved.</p>
+    </footer>
+  </body>
 </html>
