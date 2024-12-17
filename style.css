@@ -18,13 +18,13 @@ header img {
   margin-left: 10px;
 }
 header h1 a {
-    color: white; /* 設定連結文字顏色為白色 */
-    text-decoration: none; /* 移除文字底線 */
-    margin: 0 20px; /* 標題與其他內容的間距 */
-    font-size: 24px; /* 設定標題字體大小 */
-    font-weight: bold; /* 設定字體為粗體 */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 加入文字陰影效果 */
-    white-space: nowrap; /* 確保標題單行顯示 */
+  color: white; /* 設定連結文字顏色為白色 */
+  text-decoration: none; /* 移除文字底線 */
+  margin: 0 20px; /* 標題與其他內容的間距 */
+  font-size: 24px; /* 設定標題字體大小 */
+  font-weight: bold; /* 設定字體為粗體 */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 加入文字陰影效果 */
+  white-space: nowrap; /* 確保標題單行顯示 */
 }
 header nav {
   display: flex; /* 將導航列設為彈性容器，方便排列連結 */
@@ -114,4 +114,27 @@ footer a {
 }
 :hover footer a {
   text-decoration: underline; /* 滑鼠懸停時顯示底線 */
+}
+
+/* 讓文字和圖片並排顯示 */
+.inline-link {
+  display: inline-flex; /* 讓內容並排 */
+  align-items: center; /* 垂直居中對齊 */
+  font-size: 16px; /* 設定文字大小 */
+  text-decoration: none; /* 移除底線 */
+  color: black; /* 設定文字顏色 */
+}
+
+.inline-link img {
+  width: 16px; /* 設定圖片寬度 */
+  height: 16px; /* 設定圖片高度，與文字匹配 */
+  margin-left: 5px; /* 文字與圖片之間的間距 */
+}
+
+.inline-link:hover {
+  text-decoration: underline; /* 滑鼠懸停時顯示底線 */
+}
+
+.joinus_container {
+  margin: 20px; /* 增加外部間距（可選） */
 }
