@@ -124,44 +124,87 @@
         const addButton = document.getElementById('add-btn');
 
         // 新增數據
-        addButton.addEventListener('click', () => {
-            const date = document.getElementById('date').value;
-            const item = document.getElementById('item').value;
+        addButton.addEventListener('click', async () => {
+            const date = document.getElementById('date').value.trim();
+            const item = document.getElementById('item').value.trim();
             const amount = parseFloat(document.getElementById('amount').value);
             const type = document.getElementById('type').value;
 
-            if (!date || !item || isNaN(amount)) {
+            // 檢查所有欄位是否填寫正確
+            if (!date || !item || isNaN(amount) || !type) {
                 alert('請填寫所有欄位！');
                 return;
             }
 
-            const row = document.createElement('tr');
+            try {
+                const response = await fetch('http://localhost:3000/api/records', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date, item, amount, type }),
+                });
 
-            // 更新餘額
-            const adjustedAmount = type === 'income' ? amount : -amount;
-            balance += adjustedAmount;
+                if (response.ok) {
+                    console.log('新增數據成功！');
+                    loadRecords(); // 新增成功後載入資料
+                } else {
+                    const error = await response.json();
+                    alert(error.error);
+                }
+            } catch (error) {
+                console.error('發送請求時出錯:', error);
+            }
+        });
 
-            row.innerHTML = `
-                <td>${date}</td>
-                <td>${item}</td>
-                <td>${type === 'income' ? '+' : '-'}${Math.abs(amount).toFixed(2)}</td>
-                <td>${balance.toFixed(2)}</td>
-                <td><button class="delete-btn">刪除</button></td>
-            `;
-
-            // 刪除按鈕功能
-            row.querySelector('.delete-btn').addEventListener('click', () => {
-                balance -= adjustedAmount; // 還原餘額
-                row.remove(); // 刪除行
+        // 刪除紀錄
+        async function deleteRecord(id) {
+            const response = await fetch(`http://localhost:3000/api/records/${id}`, {
+                method: 'DELETE',
             });
 
-            tableBody.appendChild(row);
+            if (response.ok) {
+                loadRecords(); // 刪除成功後載入資料
+            } else {
+                alert('刪除失敗！');
+            }
+        }
 
-            // 清空輸入欄位
-            document.getElementById('date').value = '';
-            document.getElementById('item').value = '';
-            document.getElementById('amount').value = '';
-        });
+        // 加載所有紀錄
+        async function loadRecords() {
+            const response = await fetch('http://localhost:3000/api/records');
+            const records = await response.json();
+
+            // 清空表格
+            tableBody.innerHTML = '';
+
+            // 更新餘額
+            balance = 0; // 每次加載數據時重置餘額
+
+            // 更新表格
+            records.forEach(record => {
+                const row = document.createElement('tr');
+                const adjustedAmount = record.type === 'income' ? record.amount : -record.amount;
+                balance += adjustedAmount;
+
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.item}</td>
+                    <td>${record.type === 'income' ? '+' : '-'}${Math.abs(record.amount).toFixed(2)}</td>
+                    <td>${balance.toFixed(2)}</td> <!-- 顯示餘額 -->
+                    <td><button class="delete-btn" data-id="${record.id}">刪除</button></td>
+                `;
+
+                // 添加刪除按鈕的事件
+                row.querySelector('.delete-btn').addEventListener('click', () => deleteRecord(record.id));
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        // 初始化時載入數據
+        loadRecords();
+
+
+        
     </script>
 </body>
 </html>

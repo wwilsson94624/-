@@ -51,38 +51,52 @@ main {
 }
 .carousel {
   position: relative; /* 設置輪播區域為相對定位 */
-  width: 60%; /* 設定輪播區域寬度為頁面寬度的 60% */
-  margin: 0 auto; /* 將輪播區域置中 */
+  width: 70%; /* 設定輪播區域寬度為頁面寬度的 70% */
+  margin: 0 auto; /* 使用自動 margin，讓容器水平置中 */
   overflow: hidden; /* 隱藏超出範圍的內容 */
   border-radius: 10px; /* 為輪播區域設置圓角 */
+  text-align: center; /* 讓圖片置中對齊 */
 }
+
 .carousel img {
-  width: 100%; /* 圖片填滿輪播區域寬度 */
+  width: auto; /* 固定寬度，例如 300px */
+  height: 800px; /* 高度自動根據比例縮放 */
   display: none; /* 預設隱藏所有圖片 */
+  margin: 0 auto; /* 確保圖片水平置中 */
 }
 .carousel img.active {
-  display: block; /* 僅顯示當前圖片 */
+  display: inline-block; /* 僅顯示當前圖片 */
 }
+
 .carousel button {
-  position: absolute; /* 設置按鈕為絕對定位 */
-  top: 50%; /* 將按鈕置於輪播區域的垂直中間 */
-  transform: translateY(-50%); /* 調整按鈕位置使其垂直居中 */
-  background-color: rgba(0, 0, 0, 0.5); /* 設定按鈕背景顏色並帶有透明度 */
-  color: white; /* 設定按鈕文字顏色 */
-  border: none; /* 移除按鈕邊框 */
-  padding: 10px; /* 設定按鈕內邊距 */
-  cursor: pointer; /* 設定滑鼠懸停時顯示手型指標 */
-  border-radius: 5px; /* 設定按鈕的圓角 */
+  position: absolute; /* 絕對定位 */
+  top: 50%; /* 垂直居中 */
+  transform: translateY(-50%); /* 調整按鈕居中 */
+  background-color: rgba(255, 255, 255, 0.2); /* 透明效果 */
+  color: black; /* 按鈕文字顏色 */
+  border: 2px solid rgba(255, 255, 255, 0.5); /* 淡白色邊框 */
+  padding: 10px 20px; /* 按鈕內邊距（更寬的按鈕） */
+  width: 60px; /* 固定按鈕寬度 */
+  height: 100px; /* 增加按鈕高度，形成長條形 */
+  cursor: pointer; /* 滑鼠指標變成手型 */
+  border-radius: 10px; /* 輕微圓角 */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* 增加效果 */
 }
+
 .carousel button:hover {
-  background-color: rgba(0, 0, 0, 0.7); /* 滑鼠懸停時按鈕背景變深 */
+  background-color: rgba(255, 255, 255, 0.5); /* 滑鼠懸停時按鈕更亮 */
+  transform: translateY(-50%) scale(1.1); /* 放大按鈕效果 */
 }
+
 .carousel .prev {
-  left: 10px; /* 將左按鈕放置於輪播區域左側 */
+  left: 10px; /* 靠近左側 */
 }
+
 .carousel .next {
-  right: 10px; /* 將右按鈕放置於輪播區域右側 */
+  right: 10px; /* 靠近右側 */
 }
+
+
 .intro {
   margin-top: 40px; /* 與上方內容保持 40px 的距離 */
   text-align: left; /* 設定文字靠左對齊 */
