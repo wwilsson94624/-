@@ -6,19 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>資工系學會介紹</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .upload-section {
-      margin-top: 20px;
-    }
-
-    .carousel img {
-      display: none;
-    }
-
-    .carousel img.active {
-      display: block;
-    }
-  </style>
 </head>
 
 <body>
@@ -39,16 +26,6 @@
       <img src="picture/activity3.jpg" alt="活動照片 3" />
       <button class="next">下一張</button>
     </section>
-
-    <section class="upload-section">
-      <h2>新增圖片</h2>
-      <form id="uploadForm">
-        <label for="imageUpload">選擇圖片：</label>
-        <input type="file" id="imageUpload" accept="image/*" />
-        <button type="submit">新增到輪播</button>
-      </form>
-    </section>
-
     <section class="intro">
       <h2>關於資工系學會</h2>
       <p>
@@ -59,7 +36,6 @@
       </p>
     </section>
   </main>
-
   <script>
     // 設定圖片輪播功能
     let currentIndex = 0;
@@ -85,35 +61,14 @@
     nextButton.addEventListener("click", showNextImage); // 點擊右按鈕顯示下一張
 
     setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
-
-    // 新增圖片功能
-    const uploadForm = document.getElementById("uploadForm");
-    const imageUpload = document.getElementById("imageUpload");
-    const carouselSection = document.querySelector(".carousel");
-
-    uploadForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-
-      const file = imageUpload.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const newImage = document.createElement("img");
-          newImage.src = e.target.result; // 將圖片來源設定為上傳的檔案
-          newImage.alt = "使用者新增的活動照片";
-          carouselSection.insertBefore(newImage, nextButton); // 新圖片插入至 "下一張" 按鈕前
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("請選擇一張圖片！");
-      }
-    });
   </script>
 
   <footer>
     <p>
-      聯絡我們：<br />
-      <a href="mailto:ntoucssa@email.ntou.edu.tw">我們的信箱</a><br />
+      聯絡我們：
+      <br />
+      <a href="mailto:ntoucssa@email.ntou.edu.tw">我們的信箱</a>
+      <br />
       <a href="https://www.instagram.com/ntou_cse?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">ig</a>
     </p>
   </footer>
