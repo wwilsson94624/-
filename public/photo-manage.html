@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>照片管理</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <img src="picture/ntoulogo.png" alt="海洋大學 LOGO" />
+    <h1><a href="index.html">海大資工系學會介紹網站</a></h1>
+    <nav>
+      <a href="money.html">財務管理</a>
+      <a href="calendar.html">活動日程</a>
+      <a href="joinus.html">加入我們</a>
+    </nav>
+  </header>
+  
+  <main>
+    <section class="photo-management">
+      <h2>照片管理</h2>
+      
+      <!-- 顯示照片的區域 -->
+      <div id="galleryContainer">
+        <!-- 這裡顯示照片 -->
+      </div>
+
+      <!-- 新增照片功能 -->
+      <section class="upload-section">
+        <input type="file" id="fileInput" accept="image/*" />
+        <button id="uploadBtn">新增照片</button>
+      </section>
+
+      <button id="backBtn">返回首頁</button>
+    </section>
+  </main>
+
+  <script>
+    // 讀取現有的照片列表並顯示
+    fetch('/api/images')  // 使用/api/images來獲取已上傳的圖片
+      .then(response => response.json())
+      .then(data => {
+        const galleryContainer = document.getElementById("galleryContainer");
+        data.forEach((photo, index) => {
+          const photoElement = document.createElement("div");
+          photoElement.classList.add("photo-item");
+          photoElement.innerHTML = `
+            <img src="${photo}" alt="活動照片 ${index + 1}" />
+            <p>${photo.split('/').pop()}</p> <!-- 顯示檔案名稱 -->
+            <button class="delete-btn" data-photo="${photo}">刪除</button>
+          `;
+          galleryContainer.appendChild(photoElement);
+        });
+
+        // 添加刪除按鈕的事件處理器
+        document.querySelectorAll(".delete-btn").forEach(button => {
+          button.addEventListener("click", (event) => {
+            const photoPath = event.target.dataset.photo; // 獲取圖片的完整路徑
+            deletePhoto(photoPath);
+          });
+        });
+      })
+      .catch(error => {
+        console.error("無法加載照片", error);
+      });
+
+    // 刪除圖片功能
+    function deletePhoto(photoPath) {
+      fetch(`/api/delete-image/${encodeURIComponent(photoPath)}`, {  // 傳送圖片路徑進行刪除
+        method: 'DELETE',
+      })
+        .then(response => response.json())
+        .then(data => {
+          alert('刪除成功！');
+          window.location.reload(); // 重新載入頁面
+        })
+        .catch(error => {
+          console.error("刪除圖片失敗", error);
+          alert('刪除失敗！');
+        });
+    }
+
+    // 上傳圖片功能
+    document.getElementById('uploadBtn').addEventListener('click', () => {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+
+      if (file) {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+          alert('上傳成功！');
+          window.location.reload(); // 重新載入頁面以顯示新上傳的照片
+        })
+        .catch(error => {
+          console.error("上傳失敗", error);
+          alert('上傳失敗！');
+        });
+      } else {
+        alert('請選擇檔案!');
+      }
+    });
+
+    // 返回首頁
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+  </script>
+
+  <footer>
+    <p>
+      聯絡我們：<br />
+      <a href="mailto:ntoucssa@email.ntou.edu.tw">我們的信箱</a><br />
+      <a href="https://www.instagram.com/ntou_cse?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">ig</a>
+    </p>
+  </footer>
+</body>
+
+</html>

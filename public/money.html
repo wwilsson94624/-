@@ -119,6 +119,16 @@
         </section>
     </main>
     <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            // 初始載入資料
+            try {
+                await loadRecords();
+            } catch (error) {
+                console.error("載入初始資料時出錯：", error);
+                alert("無法載入財務紀錄，請稍後重試。");
+            }
+        });
+
         let balance = 0; // 初始餘額
         const tableBody = document.getElementById('table-body');
         const addButton = document.getElementById('add-btn');
@@ -157,54 +167,61 @@
 
         // 刪除紀錄
         async function deleteRecord(id) {
-            const response = await fetch(`http://localhost:3000/api/records/${id}`, {
-                method: 'DELETE',
-            });
+            try {
+                const response = await fetch(`http://localhost:3000/api/records/${id}`, {
+                    method: 'DELETE',
+                });
 
-            if (response.ok) {
-                loadRecords(); // 刪除成功後載入資料
-            } else {
-                alert('刪除失敗！');
+                if (response.ok) {
+                    loadRecords(); // 刪除成功後載入資料
+                } else {
+                    alert('刪除失敗！');
+                }
+            } catch (error) {
+                console.error('刪除請求時出錯：', error);
+                alert('無法刪除該紀錄，請稍後重試。');
             }
         }
 
         // 加載所有紀錄
         async function loadRecords() {
-            const response = await fetch('http://localhost:3000/api/records');
-            const records = await response.json();
+            try {
+                const response = await fetch('http://localhost:3000/api/records');
+                if (!response.ok) throw new Error(`伺服器回應錯誤，狀態碼：${response.status}`);
+                
+                const records = await response.json();
 
-            // 清空表格
-            tableBody.innerHTML = '';
+                // 清空表格
+                tableBody.innerHTML = '';
 
-            // 更新餘額
-            balance = 0; // 每次加載數據時重置餘額
+                // 更新餘額
+                balance = 0; // 每次加載數據時重置餘額
 
-            // 更新表格
-            records.forEach(record => {
-                const row = document.createElement('tr');
-                const adjustedAmount = record.type === 'income' ? record.amount : -record.amount;
-                balance += adjustedAmount;
+                // 更新表格
+                records.forEach(record => {
+                    const row = document.createElement('tr');
+                    const adjustedAmount = record.type === 'income' ? record.amount : -record.amount;
+                    balance += adjustedAmount;
 
-                row.innerHTML = `
-                    <td>${record.date}</td>
-                    <td>${record.item}</td>
-                    <td>${record.type === 'income' ? '+' : '-'}${Math.abs(record.amount).toFixed(2)}</td>
-                    <td>${balance.toFixed(2)}</td> <!-- 顯示餘額 -->
-                    <td><button class="delete-btn" data-id="${record.id}">刪除</button></td>
-                `;
+                    row.innerHTML = `
+                        <td>${record.date}</td>
+                        <td>${record.item}</td>
+                        <td>${record.type === 'income' ? '+' : '-'}${Math.abs(record.amount).toFixed(2)}</td>
+                        <td>${balance.toFixed(2)}</td>
+                        <td><button class="delete-btn" data-id="${record.id}">刪除</button></td>
+                    `;
 
-                // 添加刪除按鈕的事件
-                row.querySelector('.delete-btn').addEventListener('click', () => deleteRecord(record.id));
+                    // 添加刪除按鈕的事件
+                    row.querySelector('.delete-btn').addEventListener('click', () => deleteRecord(record.id));
 
-                tableBody.appendChild(row);
-            });
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("載入資料時出錯：", error);
+                alert("無法載入資料，請稍後再試。");
+            }
         }
 
-        // 初始化時載入數據
-        loadRecords();
-
-
-        
     </script>
 </body>
 </html>

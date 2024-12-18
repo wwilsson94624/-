@@ -152,3 +152,9 @@ footer a {
 .joinus_container {
   margin: 20px; /* 增加外部間距（可選） */
 }
+
+.photo-management img {
+  max-width: 100%; /* 使圖片最大寬度不超過其父元素寬度 */
+  max-height: 300px; /* 設定最大高度為 300px */
+  object-fit: contain; /* 使圖片自適應縮放，保持原比例 */
+}
