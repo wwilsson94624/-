@@ -1,74 +1,122 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>資工系學會介紹</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header>
-      <img src="picture/ntoulogo.png" alt="海洋大學 LOGO" />
-      <h1><a href="index.html">海大資工系學會介紹網站</a></h1>
-      <nav>
-        <a href="money.html">財務管理</a>
-        <a href="calendar.html">活動日程</a>
-        <a href="joinus.html">加入我們</a>
-      </nav>
-    </header>
-    <main>
-      <section class="carousel">
-        <button class="prev">上一張</button>
-        <img src="picture/activity1.jpg" alt="活動照片 1" class="active" />
-        <img src="picture/activity2.jpg" alt="活動照片 2" />
-        <img src="picture/activity3.jpg" alt="活動照片 3" />
-        <button class="next">下一張</button>
-      </section>
-      <section class="intro">
-        <h2>關於資工系學會</h2>
-        <p>
-          歡迎來到海洋大學資工系學會介紹網站！我們的學會致力於舉辦豐富多彩的活動，為學生們提供學術和生活上的支持。我們的目標是創造一個充滿活力和凝聚力的學術社群。
-        </p>
-      </section>
-    </main>
-    <script>
-      // 設定圖片輪播功能
-      let currentIndex = 0;
-      const images = document.querySelectorAll(".carousel img");
-      const prevButton = document.querySelector(".carousel .prev");
-      const nextButton = document.querySelector(".carousel .next");
 
-      function showImage(index) {
-        images[currentIndex].classList.remove("active"); // 隱藏當前圖片
-        currentIndex = (index + images.length) % images.length; // 計算新圖片索引，確保不會超出範圍
-        images[currentIndex].classList.add("active"); // 顯示新圖片
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>資工系學會介紹</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .upload-section {
+      margin-top: 20px;
+    }
 
-      function showNextImage() {
-        showImage(currentIndex + 1); // 顯示下一張圖片
-      }
+    .carousel img {
+      display: none;
+    }
 
-      function showPrevImage() {
-        showImage(currentIndex - 1); // 顯示上一張圖片
-      }
+    .carousel img.active {
+      display: block;
+    }
+  </style>
+</head>
 
-      prevButton.addEventListener("click", showPrevImage); // 點擊左按鈕顯示上一張
-      nextButton.addEventListener("click", showNextImage); // 點擊右按鈕顯示下一張
+<body>
+  <header>
+    <img src="picture/ntoulogo.png" alt="海洋大學 LOGO" />
+    <h1><a href="index.html">海大資工系學會介紹網站</a></h1>
+    <nav>
+      <a href="money.html">財務管理</a>
+      <a href="calendar.html">活動日程</a>
+      <a href="joinus.html">加入我們</a>
+    </nav>
+  </header>
+  <main>
+    <section class="carousel">
+      <button class="prev">上一張</button>
+      <img src="picture/activity1.jpg" alt="活動照片 1" class="active" />
+      <img src="picture/activity2.jpg" alt="活動照片 2" />
+      <img src="picture/activity3.jpg" alt="活動照片 3" />
+      <button class="next">下一張</button>
+    </section>
 
-      setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
-    </script>
+    <section class="upload-section">
+      <h2>新增圖片</h2>
+      <form id="uploadForm">
+        <label for="imageUpload">選擇圖片：</label>
+        <input type="file" id="imageUpload" accept="image/*" />
+        <button type="submit">新增到輪播</button>
+      </form>
+    </section>
 
-    <footer>
+    <section class="intro">
+      <h2>關於資工系學會</h2>
       <p>
-        聯絡我們：
-        <br />
-        <a href="mailto:ntoucssa@email.ntou.edu.tw">我們的信箱</a>
-        <br />
-        <a
-          href="https://www.instagram.com/ntou_cse?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-          >ig</a
-        >
+        資工系學會目前是由大二的學長姐們組成的，其中所有的幹部都由學生們擔任。
+        系學會主要功能為傳達資工系上資訊給同學、增進同學間的感情和創造優良系風。
+        資工系學會這學期舉辦各式各樣的活動，包括迎新茶會、三系聯合宿營、五系萬聖晚會等等。
+        在增進同學間感情的部分，可以藉由參加系學會舉辦的活動增進系上的同學感情、認識其他科系的同學，也藉此在緊繃的讀書環境稍做休憩。
       </p>
-    </footer>
-  </body>
+    </section>
+  </main>
+
+  <script>
+    // 設定圖片輪播功能
+    let currentIndex = 0;
+    const images = document.querySelectorAll(".carousel img");
+    const prevButton = document.querySelector(".carousel .prev");
+    const nextButton = document.querySelector(".carousel .next");
+
+    function showImage(index) {
+      images[currentIndex].classList.remove("active"); // 隱藏當前圖片
+      currentIndex = (index + images.length) % images.length; // 計算新圖片索引，確保不會超出範圍
+      images[currentIndex].classList.add("active"); // 顯示新圖片
+    }
+
+    function showNextImage() {
+      showImage(currentIndex + 1); // 顯示下一張圖片
+    }
+
+    function showPrevImage() {
+      showImage(currentIndex - 1); // 顯示上一張圖片
+    }
+
+    prevButton.addEventListener("click", showPrevImage); // 點擊左按鈕顯示上一張
+    nextButton.addEventListener("click", showNextImage); // 點擊右按鈕顯示下一張
+
+    setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
+
+    // 新增圖片功能
+    const uploadForm = document.getElementById("uploadForm");
+    const imageUpload = document.getElementById("imageUpload");
+    const carouselSection = document.querySelector(".carousel");
+
+    uploadForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const file = imageUpload.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const newImage = document.createElement("img");
+          newImage.src = e.target.result; // 將圖片來源設定為上傳的檔案
+          newImage.alt = "使用者新增的活動照片";
+          carouselSection.insertBefore(newImage, nextButton); // 新圖片插入至 "下一張" 按鈕前
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("請選擇一張圖片！");
+      }
+    });
+  </script>
+
+  <footer>
+    <p>
+      聯絡我們：<br />
+      <a href="mailto:ntoucssa@email.ntou.edu.tw">我們的信箱</a><br />
+      <a href="https://www.instagram.com/ntou_cse?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">ig</a>
+    </p>
+  </footer>
+</body>
+
 </html>
