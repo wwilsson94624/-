@@ -21,9 +21,9 @@
   <main>
     <section class="carousel">
       <button class="prev">上一張</button>
-      <img src="picture/activity1.jpg" alt="活動照片 1" class="active" />
-      <img src="picture/activity2.jpg" alt="活動照片 2" />
-      <img src="picture/activity3.jpg" alt="活動照片 3" />
+      <div id="carouselContainer">
+        <!-- 這裡動態插入圖片 -->
+      </div>
       <button class="next">下一張</button>
     </section>
     <section class="intro">
@@ -39,28 +39,40 @@
   <script>
     // 設定圖片輪播功能
     let currentIndex = 0;
-    const images = document.querySelectorAll(".carousel img");
     const prevButton = document.querySelector(".carousel .prev");
     const nextButton = document.querySelector(".carousel .next");
+    const carouselContainer = document.getElementById("carouselContainer");
 
-    function showImage(index) {
-      images[currentIndex].classList.remove("active"); // 隱藏當前圖片
-      currentIndex = (index + images.length) % images.length; // 計算新圖片索引，確保不會超出範圍
-      images[currentIndex].classList.add("active"); // 顯示新圖片
-    }
+    // 載入圖片並顯示輪播
+    fetch('/api/images')  // 從後端獲取圖片列表
+      .then(response => response.json())
+      .then(data => {
+        if (data.length > 0) {
+          data.forEach((photo, index) => {
+            const imgElement = document.createElement("img");
+            imgElement.src = photo;  // 設定圖片來源
+            imgElement.alt = `活動照片 ${index + 1}`;
+            if (index === 0) imgElement.classList.add("active");  // 設定第一張為顯示圖片
+            carouselContainer.appendChild(imgElement);
+          });
 
-    function showNextImage() {
-      showImage(currentIndex + 1); // 顯示下一張圖片
-    }
+          // 更新輪播顯示的圖片
+          function showImage(index) {
+            const images = carouselContainer.querySelectorAll("img");
+            images[currentIndex].classList.remove("active");  // 隱藏當前圖片
+            currentIndex = (index + images.length) % images.length;  // 確保索引不會超出範圍
+            images[currentIndex].classList.add("active");  // 顯示新圖片
+          }
 
-    function showPrevImage() {
-      showImage(currentIndex - 1); // 顯示上一張圖片
-    }
+          function showNextImage() {
+            showImage(currentIndex + 1); // 顯示下一張圖片
+          }
 
-    prevButton.addEventListener("click", showPrevImage); // 點擊左按鈕顯示上一張
-    nextButton.addEventListener("click", showNextImage); // 點擊右按鈕顯示下一張
+          function showPrevImage() {
+            showImage(currentIndex - 1); // 顯示上一張圖片
+          }
 
-    setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
+          setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
   </script>
 
   <footer>
