@@ -26,15 +26,20 @@
       </div>
       <button class="next">下一張</button>
     </section>
-    <section class="intro">
-      <h2>關於資工系學會</h2>
-      <p>
-        資工系學會目前是由大二的學長姐們組成的，其中所有的幹部都由學生們擔任。
-        系學會主要功能為傳達資工系上資訊給同學、增進同學間的感情和創造優良系風。
-        資工系學會這學期舉辦各式各樣的活動，包括迎新茶會、三系聯合宿營、五系萬聖晚會等等。
-        在增進同學間感情的部分，可以藉由參加系學會舉辦的活動增進系上的同學感情、認識其他科系的同學，也藉此在緊繃的讀書環境稍做休憩。
-      </p>
-    </section>
+    <<<<<<< HEAD=======<section class="upload-section">
+      <button id="manage-photos-button">前往照片編輯</button>
+      </section>
+
+      >>>>>>> 2a136dd84ef0004a50c0e1edeea1896740bb4dec
+      <section class="intro">
+        <h2>關於資工系學會</h2>
+        <p>
+          資工系學會目前是由大二的學長姐們組成的，其中所有的幹部都由學生們擔任。
+          系學會主要功能為傳達資工系上資訊給同學、增進同學間的感情和創造優良系風。
+          資工系學會這學期舉辦各式各樣的活動，包括迎新茶會、三系聯合宿營、五系萬聖晚會等等。
+          在增進同學間感情的部分，可以藉由參加系學會舉辦的活動增進系上的同學感情、認識其他科系的同學，也藉此在緊繃的讀書環境稍做休憩。
+        </p>
+      </section>
   </main>
   <script>
     // 設定圖片輪播功能
@@ -73,6 +78,20 @@
           }
 
           setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
+          prevButton.addEventListener("click", showPrevImage);  // 點擊左按鈕顯示上一張
+          nextButton.addEventListener("click", showNextImage);  // 點擊右按鈕顯示下一張
+
+          setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
+        }
+      })
+      .catch(error => {
+        console.error("無法加載圖片", error);
+      });
+
+    // 照片管理按鈕
+    document.getElementById("manage-photos-button").addEventListener("click", () => {
+      window.location.href = "photo-manage.html"; // 跳轉至照片管理頁面
+    });
   </script>
 
   <footer>
