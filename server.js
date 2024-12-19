@@ -141,15 +141,14 @@ app.get('/api/images', (req, res) => {
 
 // 刪除圖片的路由
 app.delete('/api/delete-image/:filename', (req, res) => {
-    const filename = req.params.filename;
+    const filename = req.params.filename; // 接收到的應該是檔案名稱
     const filePath = path.join(__dirname, 'public', 'picture', 'upload', filename);
 
-    // 刪除圖片檔案
     fs.unlink(filePath, (err) => {
         if (err) {
-            return res.status(500).json({ error: '無法刪除圖片' });
+            console.error('刪除圖片失敗：', err);
+            return res.status(500).json({ error: '無法刪除圖片，可能檔案不存在' });
         }
-
         res.json({ message: '圖片刪除成功' });
     });
 });

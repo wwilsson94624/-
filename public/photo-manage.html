@@ -69,17 +69,18 @@
 
     // 刪除圖片功能
     function deletePhoto(photoPath) {
-      fetch(`/api/delete-image/${encodeURIComponent(photoPath)}`, {  // 傳送圖片路徑進行刪除
-        method: 'DELETE',
-      })
+        const photoFilename = photoPath.split('/').pop(); // 取得檔案名稱
+        fetch(`/api/delete-image/${encodeURIComponent(photoFilename)}`, {
+            method: 'DELETE',
+        })
         .then(response => response.json())
         .then(data => {
-          alert('刪除成功！');
-          window.location.reload(); // 重新載入頁面
+            alert(data.message || '刪除成功！');
+            window.location.reload(); // 重新載入頁面
         })
         .catch(error => {
-          console.error("刪除圖片失敗", error);
-          alert('刪除失敗！');
+            console.error("刪除圖片失敗", error);
+            alert('刪除失敗！');
         });
     }
 
