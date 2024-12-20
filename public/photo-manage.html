@@ -18,11 +18,11 @@
       <a href="joinus.html">加入我們</a>
     </nav>
   </header>
-  
+
   <main>
     <section class="photo-management">
       <h2>照片管理</h2>
-      
+
       <!-- 顯示照片的區域 -->
       <div id="galleryContainer">
         <!-- 這裡顯示照片 -->
@@ -69,12 +69,13 @@
 
     // 刪除圖片功能
     function deletePhoto(photoPath) {
-      fetch(`/api/delete-image/${encodeURIComponent(photoPath)}`, {  // 傳送圖片路徑進行刪除
+      const photoFilename = photoPath.split('/').pop(); // 取得檔案名稱
+      fetch(`/api/delete-image/${encodeURIComponent(photoFilename)}`, {
         method: 'DELETE',
       })
         .then(response => response.json())
         .then(data => {
-          alert('刪除成功！');
+          alert(data.message || '刪除成功！');
           window.location.reload(); // 重新載入頁面
         })
         .catch(error => {
@@ -96,15 +97,15 @@
           method: 'POST',
           body: formData,
         })
-        .then(response => response.json())
-        .then(data => {
-          alert('上傳成功！');
-          window.location.reload(); // 重新載入頁面以顯示新上傳的照片
-        })
-        .catch(error => {
-          console.error("上傳失敗", error);
-          alert('上傳失敗！');
-        });
+          .then(response => response.json())
+          .then(data => {
+            alert('上傳成功！');
+            window.location.reload(); // 重新載入頁面以顯示新上傳的照片
+          })
+          .catch(error => {
+            console.error("上傳失敗", error);
+            alert('上傳失敗！');
+          });
       } else {
         alert('請選擇檔案!');
       }
@@ -117,11 +118,7 @@
   </script>
 
   <footer>
-    <p>
-      聯絡我們：<br />
-      <a href="mailto:ntoucssa@email.ntou.edu.tw">我們的信箱</a><br />
-      <a href="https://www.instagram.com/ntou_cse?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">ig</a>
-    </p>
+    <p>&copy; 2024 海大資工系學會. All Rights Reserved.</p>
   </footer>
 </body>
 

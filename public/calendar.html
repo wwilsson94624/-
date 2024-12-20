@@ -1,137 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>系學會活動日程</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://apis.google.com/js/api.js"></script>
-  </head>
-  <body>
-    <header>
-      <img src="picture/ntoulogo.png" alt="海洋大學 LOGO" />
-      <h1><a href="index.html">海大資工系學會介紹網站</a></h1>
-      <nav>
-        <a href="money.html">財務管理</a>
-        <a href="calendar.html">活動日程</a>
-        <a href="joinus.html">加入我們</a>
-      </nav>
-    </header>
 
-    <main>
-      <h1>系學會活動日程</h1>
-      <!-- 嵌入 Google 行事曆 -->
-      <iframe
-        src="https://calendar.google.com/calendar/embed?src=ntoucssa%40email.ntou.edu.tw&ctz=Asia%2FTaipei"
-        style="border: 0; width: 100%; max-width: 800px; height: 600px"
-        frameborder="0"
-        scrolling="no"
-      ></iframe>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>系學會活動日程</title>
+  <link rel="stylesheet" href="style.css" />
 
-      <section>
-        <h2>新增活動到行事曆</h2>
-        <form id="eventForm">
-          <label for="eventTitle">事件標題：</label>
-          <input
-            type="text"
-            id="eventTitle"
-            name="eventTitle"
-            required
-          /><br /><br />
+  <!-- 引入 FullCalendar 的 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet" />
 
-          <label for="eventDate">日期：</label>
-          <input
-            type="date"
-            id="eventDate"
-            name="eventDate"
-            required
-          /><br /><br />
+  <!-- 引入 FullCalendar 的 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 
-          <label for="eventTime">時間：</label>
-          <input
-            type="time"
-            id="eventTime"
-            name="eventTime"
-            required
-          /><br /><br />
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: '/api/events',  // 從後端獲取事件
+      });
+      calendar.render();
 
-          <button type="button" id="authorizeButton">登入 Google</button>
-          <button type="button" id="submitButton" disabled>新增事件</button>
-        </form>
+      // 當表單提交時，將資料送到後端
+      document.getElementById('eventForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // 防止表單的默認提交
 
-        <script>
-          let gapiLoaded = false;
+        var eventTitle = document.getElementById('eventTitle').value;
+        var eventDate = document.getElementById('eventDate').value;
+        var eventTime = document.getElementById('eventTime').value;
+        var isAllDay = document.getElementById('isAllDay').checked;
 
-          // 載入 Google API
-          function loadGapi() {
-            gapi.load("client:auth2", async () => {
-              await gapi.client.init({
-                apiKey: "你的API金鑰",
-                clientId: "你的用戶端ID.apps.googleusercontent.com",
-                discoveryDocs: [
-                  "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
-                ],
-                scope: "https://www.googleapis.com/auth/calendar.events",
-              });
-              gapiLoaded = true;
-              document.getElementById("authorizeButton").disabled = false;
-            });
-          }
+        if (eventTitle && eventDate) {
+          // 若選擇了整天活動，時間設置為全天
+          var eventStart = eventDate + (isAllDay ? 'T00:00:00' : 'T' + eventTime + ':00');
+          var eventEnd = isAllDay ? eventDate + 'T23:59:59' : eventStart;
 
-          // 登入 Google 帳戶
-          async function authorize() {
-            if (!gapiLoaded) return;
-            await gapi.auth2.getAuthInstance().signIn();
-            document.getElementById("submitButton").disabled = false;
-          }
+          var eventData = {
+            title: eventTitle,
+            start: eventStart,
+            end: eventEnd,
+          };
 
-          // 新增事件
-          async function addEvent() {
-            const eventTitle = document.getElementById("eventTitle").value;
-            const eventDate = document.getElementById("eventDate").value;
-            const eventTime = document.getElementById("eventTime").value;
-
-            const event = {
-              summary: eventTitle,
-              start: {
-                dateTime: `${eventDate}T${eventTime}:00`,
-                timeZone: "Asia/Taipei",
-              },
-              end: {
-                dateTime: `${eventDate}T${eventTime}:00`,
-                timeZone: "Asia/Taipei",
-              },
-            };
-
-            try {
-              const response = await gapi.client.calendar.events.insert({
-                calendarId: "primary",
-                resource: event,
-              });
-              alert("事件新增成功！");
-              console.log(response);
-            } catch (error) {
-              alert("新增事件時發生錯誤！");
+          // 使用 AJAX 將事件資料傳送到後端
+          fetch('/api/add-event', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(eventData),
+          })
+            .then(response => response.json())
+            .then(data => {
+              // 事件新增成功後重新渲染日曆
+              calendar.refetchEvents();
+              document.getElementById('eventForm').reset(); // 清空表單
+            })
+            .catch(error => {
+              alert('新增事件失敗');
               console.error(error);
-            }
-          }
+            });
+        } else {
+          alert('請填寫完整的活動名稱、日期');
+        }
+      });
+    });
+  </script>
 
-          // 綁定事件
-          document
-            .getElementById("authorizeButton")
-            .addEventListener("click", authorize);
-          document
-            .getElementById("submitButton")
-            .addEventListener("click", addEvent);
+  <style>
+    .calendar-container {
+      width: 700px;
+      height: 600px;
+      margin: 0 auto;
 
-          // 載入 API
-          loadGapi();
-        </script>
-      </section>
-    </main>
+      padding: 20px;
+      border: 2px solid black;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-    <footer>
-      <p>&copy; 2024 海大資工系學會. All Rights Reserved.</p>
-    </footer>
-  </body>
+    #calendar {
+      margin-top: 20px;
+    }
+
+    #eventForm {
+      margin-top: 20px;
+    }
+
+    #eventForm input,
+    #eventForm select {
+      margin: 5px 0;
+      padding: 5px;
+    }
+
+    #eventForm button {
+      padding: 5px 10px;
+      margin-top: 10px;
+    }
+
+    .form-container {
+      width: 700px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 2px solid black;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="picture/ntoulogo.png" alt="海洋大學 LOGO" />
+    <h1><a href="index.html">海大資工系學會介紹網站</a></h1>
+    <nav>
+      <a href="money.html">財務管理</a>
+      <a href="calendar.html">活動日程</a>
+      <a href="joinus.html">加入我們</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>系學會活動日程</h1>
+
+    <div class="calendar-container">
+      <!-- 顯示日曆 -->
+      <div id="calendar"></div>
+    </div>
+
+    <div class="form-container">
+      <!-- 活動新增表單 -->
+      <form id="eventForm">
+        <h2>新增活動</h2>
+        <div>
+          <label for="eventTitle">活動名稱：</label>
+          <input type="text" id="eventTitle" placeholder="請輸入活動名稱" required />
+        </div>
+
+        <div>
+          <label for="eventDate">活動日期：</label>
+          <input type="date" id="eventDate" required />
+        </div>
+        <div>
+          <label for="eventTime">活動時間：</label>
+          <input type="time" id="eventTime" />
+          <label for="isAllDay">整天活動：</label>
+          <input type="checkbox" id="isAllDay" />
+        </div>
+
+        <div>
+          <button type="submit">新增活動</button>
+        </div>
+
+      </form>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 海大資工系學會. All Rights Reserved.</p>
+  </footer>
+</body>
+
 </html>
