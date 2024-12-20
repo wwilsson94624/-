@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,17 +13,15 @@
         }
 
         .table-section {
-            flex: 3;
-            /* 左側 60% */
+            flex: 3; /* 左側 60% */
         }
 
         .form-section {
-            flex: 2;
-            /* 右側 40% */
+            flex: 2; /* 右側 40% */
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 20px;
-            background-color: #f9f9f9;
+            background-color: #f7f7f7; /* 淺藍色背景 */
         }
 
         .form-section label {
@@ -32,8 +29,7 @@
             margin-bottom: 5px;
         }
 
-        .form-section input,
-        .form-section select {
+        .form-section input, .form-section select {
             margin-bottom: 10px;
             padding: 5px;
             width: 100%;
@@ -58,8 +54,7 @@
             border-collapse: collapse;
         }
 
-        table th,
-        table td {
+        table th, table td {
             padding: 10px;
             text-align: left;
             border: 1px solid #ddd;
@@ -67,6 +62,14 @@
 
         table th {
             background-color: #f4f4f4;
+        }
+
+        table tr:nth-child(odd) {
+            background-color: #e3f2fd; /* 淺藍色背景 */
+        }
+
+        table tr:nth-child(even) {
+            background-color: #ffffff; /* 白色背景 */
         }
 
         .delete-btn {
@@ -81,9 +84,9 @@
         .delete-btn:hover {
             background-color: #ff1a1a;
         }
+
     </style>
 </head>
-
 <body>
     <header>
         <img src="picture/ntoulogo.png" alt="海洋大學 LOGO">
@@ -119,19 +122,19 @@
             <h2>新增紀錄</h2>
             <label for="date">時間：</label>
             <input type="date" id="date">
-
+            
             <label for="item">品項：</label>
             <input type="text" id="item" placeholder="請輸入品項">
-
+            
             <label for="amount">金額：</label>
             <input type="number" id="amount" placeholder="請輸入金額">
-
+            
             <label for="type">類型：</label>
             <select id="type">
                 <option value="income">收入</option>
                 <option value="expense">支出</option>
             </select>
-
+            
             <button id="add-btn">新增數據</button>
         </section>
     </main>
@@ -205,7 +208,7 @@
             try {
                 const response = await fetch('http://localhost:3000/api/records');
                 if (!response.ok) throw new Error(`伺服器回應錯誤，狀態碼：${response.status}`);
-
+                
                 const records = await response.json();
 
                 // 清空表格
@@ -244,5 +247,4 @@
         <p>&copy; 2024 海大資工系學會. All Rights Reserved.</p>
     </footer>
 </body>
-
 </html>
