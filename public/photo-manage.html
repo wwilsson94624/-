@@ -75,7 +75,7 @@
       })
         .then(response => response.json())
         .then(data => {
-          alert(data.message || '刪除成功！');
+          alert('刪除成功！');
           window.location.reload(); // 重新載入頁面
         })
         .catch(error => {
