@@ -30,6 +30,7 @@
         var eventDate = document.getElementById('eventDate').value;
         var eventTime = document.getElementById('eventTime').value;
         var isAllDay = document.getElementById('isAllDay').checked;
+        var eventColor = document.getElementById('eventColor').value;
 
         if (eventTitle && eventDate) {
           // 若選擇了整天活動，時間設置為全天
@@ -40,6 +41,7 @@
             title: eventTitle,
             start: eventStart,
             end: eventEnd,
+            color: eventColor
           };
 
           // 使用 AJAX 將事件資料傳送到後端
@@ -55,6 +57,7 @@
               // 事件新增成功後重新渲染日曆
               calendar.refetchEvents();
               document.getElementById('eventForm').reset(); // 清空表單
+              loadEvents(); // 重新載入事件列表
             })
             .catch(error => {
               alert('新增事件失敗');
@@ -64,45 +67,153 @@
           alert('請填寫完整的活動名稱、日期');
         }
       });
+
+      // 載入事件列表
+      function loadEvents() {
+        fetch('/api/events')
+          .then(response => response.json())
+          .then(events => {
+            var eventsTableBody = document.getElementById('eventsTableBody');
+            eventsTableBody.innerHTML = ''; // 清空表格
+
+            events.forEach(event => {
+              var row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${event.title}</td>
+                <td>${event.start}</td>
+                <td><button data-id="${event.id}" class="delete-btn">刪除</button></td>
+              `;
+              eventsTableBody.appendChild(row);
+            });
+
+            // 綁定刪除按鈕事件
+            document.querySelectorAll('.delete-btn').forEach(button => {
+              button.addEventListener('click', function () {
+                var eventId = this.getAttribute('data-id');
+                deleteEvent(eventId);
+              });
+            });
+          })
+          .catch(error => {
+            console.error('載入事件失敗', error);
+          });
+      }
+
+      // 刪除事件
+      function deleteEvent(eventId) {
+        fetch(`/api/delete-event/${eventId}`, {
+          method: 'DELETE',
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              calendar.refetchEvents(); // 重新渲染日曆
+              loadEvents(); // 重新載入事件列表
+            } else {
+              alert('刪除事件失敗');
+            }
+          })
+          .catch(error => {
+            console.error('刪除事件失敗', error);
+          });
+      }
+
+      // 初始載入事件列表
+      loadEvents();
     });
   </script>
 
   <style>
-    .calendar-container {
-      width: 700px;
-      height: 600px;
-      margin: 0 auto;
-
+    .container {
+      display: flex;
+      /* 使用 flexbox 佈局 */
+      justify-content: space-between;
+      /* 使子元素之間的空間均等 */
+      align-items: flex-start;
+      /* 將子元素的頂部對齊 */
+      width: 90%;
+      /* 設置容器寬度為 100% */
       padding: 20px;
+      /* 設置容器內邊距為 20px */
+      margin: 0 auto;
+      /* 水平居中 */
+    }
+
+    .calendar-container {
+      flex: 2;
+      /* 使日曆容器佔據 2/3 的空間 */
+      margin-right: 20px;
+      /* 設置右邊距為 20px */
       border: 2px solid black;
+      /* 設置邊框為 2px 寬的黑色實線 */
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      /* 設置陰影效果 */
+      height: 600px;
+      /* 設置日曆容器高度為 600px */
     }
 
     #calendar {
       margin-top: 20px;
+      /* 設置頂部邊距為 20px */
+      height: 90%;
+      /* 設置日曆高度為容器高度 */
     }
 
-    #eventForm {
-      margin-top: 20px;
+    .event-container {
+      flex: 1;
+      /* 使事件容器佔據 1/3 的空間 */
+      display: flex;
+      /* 使用 flexbox 佈局 */
+      flex-direction: column;
+      /* 使子元素垂直排列 */
+    }
+
+    .form-container {
+      margin-bottom: 20px;
+      /* 設置底部邊距為 20px */
+      padding: 20px;
+      /* 設置內邊距為 20px */
+      border: 2px solid black;
+      /* 設置邊框為 2px 寬的黑色實線 */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      /* 設置陰影效果 */
     }
 
     #eventForm input,
     #eventForm select {
       margin: 5px 0;
+      /* 設置上下邊距為 5px */
       padding: 5px;
+      /* 設置內邊距為 5px */
     }
 
     #eventForm button {
       padding: 5px 10px;
+      /* 設置內邊距為 5px 10px */
       margin-top: 10px;
+      /* 設置頂部邊距為 10px */
     }
 
-    .form-container {
-      width: 700px;
-      margin: 0 auto;
-      padding: 20px;
-      border: 2px solid black;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    .events-table {
+      width: 100%;
+      /* 設置表格寬度為 100% */
+      border-collapse: collapse;
+      /* 合併表格邊框 */
+    }
+
+    .events-table th,
+    .events-table td {
+      border: 1px solid black;
+      /* 設置邊框為 1px 寬的黑色實線 */
+      padding: 10px;
+      /* 設置內邊距為 10px */
+      text-align: left;
+      /* 設置文字左對齊 */
+    }
+
+    .events-table th {
+      background-color: #f2f2f2;
+      /* 設置表頭背景色為淡灰色 */
     }
   </style>
 </head>
@@ -121,38 +232,61 @@
   <main>
     <h1>系學會活動日程</h1>
 
-    <div class="calendar-container">
-      <!-- 顯示日曆 -->
-      <div id="calendar"></div>
+    <div class="container">
+      <div class="calendar-container">
+        <!-- 顯示日曆 -->
+        <div id="calendar"></div>
+      </div>
+
+      <div class="event-container">
+        <div class="form-container">
+          <!-- 活動新增表單 -->
+          <form id="eventForm">
+            <h2>新增活動</h2>
+            <div>
+              <label for="eventTitle">活動名稱：</label>
+              <input type="text" id="eventTitle" placeholder="請輸入活動名稱" required />
+            </div>
+
+            <div>
+              <label for="eventDate">活動日期：</label>
+              <input type="date" id="eventDate" required />
+            </div>
+            <div>
+              <label for="eventTime">活動時間：</label>
+              <input type="time" id="eventTime" />
+              <label for="isAllDay">整天活動：</label>
+              <input type="checkbox" id="isAllDay" />
+            </div>
+
+            <div>
+              <label for="eventColor">活動顏色：</label>
+              <input type="color" id="eventColor" value="#378006" />
+            </div>
+
+            <div>
+              <button type="submit">新增活動</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="form-container">
+          <h2>活動列表</h2>
+          <table class="events-table">
+            <thead>
+              <tr>
+                <th>活動名稱</th>
+                <th>活動日期</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="eventsTableBody">
+              <!-- 事件列表將動態載入 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-
-    <div class="form-container">
-      <!-- 活動新增表單 -->
-      <form id="eventForm">
-        <h2>新增活動</h2>
-        <div>
-          <label for="eventTitle">活動名稱：</label>
-          <input type="text" id="eventTitle" placeholder="請輸入活動名稱" required />
-        </div>
-
-        <div>
-          <label for="eventDate">活動日期：</label>
-          <input type="date" id="eventDate" required />
-        </div>
-        <div>
-          <label for="eventTime">活動時間：</label>
-          <input type="time" id="eventTime" />
-          <label for="isAllDay">整天活動：</label>
-          <input type="checkbox" id="isAllDay" />
-        </div>
-
-        <div>
-          <button type="submit">新增活動</button>
-        </div>
-
-      </form>
-    </div>
-
   </main>
 
   <footer>

@@ -189,7 +189,7 @@ app.get("/api/events", (req, res) => {
 
 // POST /api/add-event - 新增事件
 app.post("/api/add-event", (req, res) => {
-  const { title, start } = req.body;
+  const { title, start, color } = req.body;
   if (!title || !start) {
     return res.status(400).json({ error: "事件標題與開始時間為必填項目！" });
   }
@@ -198,10 +198,29 @@ app.post("/api/add-event", (req, res) => {
     id: events.length + 1,
     title,
     start,
+    color,
   };
   events.push(event);
   saveEvents();
   res.status(201).json(event);
+});
+
+// DELETE /api/delete-event/:id - 刪除事件
+app.delete("/api/delete-event/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = events.findIndex((event) => event.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ error: "找不到該事件！" });
+  }
+
+  // 刪除事件
+  events.splice(index, 1);
+
+  // 儲存事件資料到檔案
+  saveEvents();
+
+  res.json({ success: true });
 });
 
 // 啟動伺服器
