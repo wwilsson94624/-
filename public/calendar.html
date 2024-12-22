@@ -12,7 +12,7 @@
 
   <!-- 引入 FullCalendar 的 JS -->
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-  <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> -->
+  
   <script>
 
   
@@ -157,7 +157,6 @@
               document.getElementById('eventdelth').style.display = 'block' ;
               
                   [].forEach.call(document.querySelectorAll('.xhide'), function (el) {
-                      // el.style.visibility = 'visible';
                       el.style.display = 'block';
                   });
           } else {
@@ -165,13 +164,10 @@
               document.getElementById('eventdelth').style.display = 'none   ' ;
 
                   [].forEach.call(document.querySelectorAll('.xhide'), function (el) {
-                      //el.style.visibility = 'hidden';
                       el.style.display = 'none';
                   });
           } // if ( iokay > 0 )
-              
-              //document.getElementsByClassName('xhide').style.visibility = 'hidden' ;
-              //document.getElementsByClassName('xhide').style.visibility = 'visible' ;          
+       
           //-----------------------------------------------------------------------------------------
         } catch (error) {
           console.error("載入資料時出錯：", error);
