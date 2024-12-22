@@ -12,17 +12,9 @@
 
   <!-- 引入 FullCalendar 的 JS -->
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-
+  
   <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-            // 初始載入session資料
-            try {
-                await loadRecords();
-            } catch (error) {
-                console.error("載入初始資料時出錯：", error);
-                alert("無法載入session紀錄，請稍後重試。");
-            }
-    });
+
   
     document.addEventListener('DOMContentLoaded', function () {
       var calendarEl = document.getElementById('calendar');
@@ -91,7 +83,7 @@
               row.innerHTML = `
                 <td>${event.title}</td>
                 <td>${event.start}</td>
-                <td><button data-id="${event.id}" class="delete-btn">刪除</button></td>
+                <td class="xhide"><button data-id="${event.id}" class="delete-btn">刪除</button></td>
               `;
               eventsTableBody.appendChild(row);
             });
@@ -133,6 +125,16 @@
     });
   </script>
 <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+            // 初始載入session資料
+            try {
+                await loadRecords();
+            } catch (error) {
+                console.error("載入初始資料時出錯：", error);
+                alert("無法載入session紀錄，請稍後重試。");
+            }
+    });
+
   async function loadRecords() {
       try {
           //-------------------------------------session 判斷----------------------------------------------------
@@ -153,8 +155,19 @@
           if ( iokay > 0 ) {
               document.getElementById('eventnew').style.display = 'block' ;
               document.getElementById('eventdelth').style.display = 'block' ;
-          }                 
-          
+              
+                  [].forEach.call(document.querySelectorAll('.xhide'), function (el) {
+                      el.style.display = 'block';
+                  });
+          } else {
+              document.getElementById('eventnew').style.display = 'none' ;
+              document.getElementById('eventdelth').style.display = 'none   ' ;
+
+                  [].forEach.call(document.querySelectorAll('.xhide'), function (el) {
+                      el.style.display = 'none';
+                  });
+          } // if ( iokay > 0 )
+       
           //-----------------------------------------------------------------------------------------
         } catch (error) {
           console.error("載入資料時出錯：", error);
@@ -255,6 +268,11 @@
       background-color: #f2f2f2;
       /* 設置表頭背景色為淡灰色 */
     }
+
+  /*  .xhide{
+        visibility: hidden;
+    }
+        */
   </style>
 </head>
 
