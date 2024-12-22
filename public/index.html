@@ -10,8 +10,8 @@
 
 <body>
   <header>
-    <img src="picture/ntoulogo.png" alt="海洋大學 LOGO" />
-    <h1><a href="index.html">海大資工系學會介紹網站</a></h1>
+    <a href="admin.html"><img src="picture/ntoulogo.png" alt="海洋大學 LOGO" /></a>
+        <h1><a href="index.html">海大資工系學會介紹網站</a></h1>
     <nav>
       <a href="money.html">財務管理</a>
       <a href="calendar.html">活動日程</a>
@@ -26,7 +26,7 @@
       </div>
       <button class="next">下一張</button>
     </section>
-    <button id="manage-photos-button">照片編輯</button>
+    <section id="fotoedit" ><button id="manage-photos-button" >照片編輯</button></section>
     <div class="card-container">
       <!-- 學會介紹卡片 -->
       <div class="card">
@@ -53,6 +53,50 @@
     </div>
   </main>
   <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+            // 初始載入資料
+            try {
+                await loadRecords();
+            } catch (error) {
+                console.error("載入初始session資料時出錯：", error);
+                alert("無法載入session紀錄，請稍後重試。");
+            }
+        });  // 載入資料 document.addEventListener
+
+    // 加載所有紀錄
+    async function loadRecords() {
+        try {
+            //-------------------------------------session 判斷----------------------------------------------------
+            const response2 = await fetch('http://localhost:3000/api/xsessions');
+            if (!response2.ok) throw new Error(`伺服器回應錯誤，session狀態碼：${response2.status}`);
+
+            const xsessions = await response2.json();
+
+            var iokay = 0  ;
+            // 列出所有session白名單
+            xsessions.forEach(xsession => {
+                if (xsession.username == sessionStorage.getItem('username') && xsession.password == sessionStorage.getItem('password') ) {
+                    iokay = iokay + 1;  // 如果iokay = 1 , 就可以顯示 刪除按鈕
+                }  
+
+            }); //   xsessions.forEach(xsession =>
+            
+            //if ( iokay == 0 ) {alert("NO!!!");}   在 forEach之外，iokay 依然有效。
+
+            if ( iokay > 0 ) {
+                document.getElementById('fotoedit').style.display = 'block' ;
+            }            
+            else {
+                document.getElementById('fotoedit').style.display = 'none' ;
+            }
+
+          } catch (error) {
+                console.error("載入資料時出錯：", error);
+                alert("無法載入資料，請稍後再試。");
+          } // try
+    } //async function loadRecords()
+
+
     // 設定圖片輪播功能
     let currentIndex = 0;
     const prevButton = document.querySelector(".carousel .prev");

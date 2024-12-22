@@ -108,7 +108,7 @@
                         <th>品項</th>
                         <th>金額</th>
                         <th>餘額</th>
-                        <th>操作</th>
+                        <th id='th4operate' style='display:none;'>操作</th>
                     </tr>
                 </thead>
                 <tbody id="table-body">
@@ -118,7 +118,7 @@
         </section>
 
         <!-- 右側：表單 -->
-        <section class="form-section">
+        <section class="form-section" id="newadd"  style="display:none;">
             <h2>新增紀錄</h2>
             <label for="date">時間：</label>
             <input type="date" id="date">
@@ -203,9 +203,29 @@
             }
         }
 
-        // 加載所有紀錄
-        async function loadRecords() {
+                // 加載所有紀錄
+                async function loadRecords() {
             try {
+                //-------------------------------------session 判斷----------------------------------------------------
+                const response2 = await fetch('http://localhost:3000/api/xsessions');
+                if (!response2.ok) throw new Error(`伺服器回應錯誤，session狀態碼：${response2.status}`);
+
+                const xsessions = await response2.json();
+
+                var iokay = 0  ;
+                // 列出所有session白名單
+                xsessions.forEach(xsession => {
+
+                    if (xsession.username == sessionStorage.getItem('username') && xsession.password == sessionStorage.getItem('password') ) {
+                        iokay = iokay + 1;  // 如果iokay = 1 , 就可以顯示 刪除按鈕
+                    }  
+
+                }); //   xsessions.forEach(xsession =>
+                
+                //if ( iokay == 0 ) {alert("NO!!!");}   在 forEach之外，iokay 依然有效。
+                
+                //-----------------------------------以下 財務系統 ------------------------------------------------------
+
                 const response = await fetch('http://localhost:3000/api/records');
                 if (!response.ok) throw new Error(`伺服器回應錯誤，狀態碼：${response.status}`);
                 
@@ -228,20 +248,31 @@
                         <td>${record.item}</td>
                         <td>${record.type === 'income' ? '+' : '-'}${Math.abs(record.amount).toFixed(2)}</td>
                         <td>${balance.toFixed(2)}</td>
-                        <td><button class="delete-btn" data-id="${record.id}">刪除</button></td>
                     `;
 
-                    // 添加刪除按鈕的事件
-                    row.querySelector('.delete-btn').addEventListener('click', () => deleteRecord(record.id));
+                    if ( iokay > 0 ) {
+                        row.innerHTML = row.innerHTML + `<td><button class="delete-btn" data-id="${record.id}">刪除</button></td>`;
+
+                        // 添加刪除按鈕的事件
+                        row.querySelector('.delete-btn').addEventListener('click', () => deleteRecord(record.id));
+                    } // if iokay 
 
                     tableBody.appendChild(row);
-                });
+                }); //   records.forEach(record => 
+
+                if ( iokay > 0 ) {
+                    document.getElementById('newadd').style.display = 'block' ;
+                    document.getElementById('th4operate').style.display = 'block' ;
+                }
+
             } catch (error) {
                 console.error("載入資料時出錯：", error);
                 alert("無法載入資料，請稍後再試。");
-            }
-        }
+            } // try
 
+
+                                 
+        } //async function loadRecords()
     </script>
     <footer>
         <p>&copy; 2024 海大資工系學會. All Rights Reserved.</p>

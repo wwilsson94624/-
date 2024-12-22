@@ -1,4 +1,5 @@
 const express = require("express");
+const session = require('express-session');
 const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
@@ -26,6 +27,10 @@ const dataFilePath = path.join(__dirname, "data.json");
 let events = [];
 const eventsFilePath = path.join(__dirname, "events.json");
 
+// 暫存session事件
+let xsessions = [];
+const xsessionsFilePath = path.join(__dirname, "xsessions.json");
+
 // 載入資料
 function loadData() {
   try {
@@ -48,6 +53,16 @@ function loadData() {
     console.error("事件檔案讀取錯誤，使用預設空資料。", err);
     events = [];
   }
+    // 載入session資料
+    try {
+      const xsessionsData = fs.readFileSync(xsessionsFilePath, "utf8");
+      if (xsessionsData) {
+        xsessions = JSON.parse(xsessionsData);
+      }
+    } catch (err) {
+      console.error("session檔案讀取錯誤，使用預設空資料。", err);
+      xsessions = [];
+    }
 }
 
 // 寫入資料
@@ -76,6 +91,14 @@ loadData();
 app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
+
+
+// GET /api/xsessions - 取得所有sessions
+app.get("/api/xsessions", (req, res) => {
+  console.log("收到 GET 請求，返回所有session紀錄");
+  res.json(xsessions);
+});
+
 
 // --- 財務管理 API ---
 

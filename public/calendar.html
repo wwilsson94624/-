@@ -14,6 +14,16 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 
   <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+            // 初始載入session資料
+            try {
+                await loadRecords();
+            } catch (error) {
+                console.error("載入初始資料時出錯：", error);
+                alert("無法載入session紀錄，請稍後重試。");
+            }
+    });
+  
     document.addEventListener('DOMContentLoaded', function () {
       var calendarEl = document.getElementById('calendar');
       var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -122,6 +132,36 @@
       loadEvents();
     });
   </script>
+<script>
+  async function loadRecords() {
+      try {
+          //-------------------------------------session 判斷----------------------------------------------------
+          const response2 = await fetch('http://localhost:3000/api/xsessions');
+          if (!response2.ok) throw new Error(`伺服器回應錯誤，session狀態碼：${response2.status}`);
+
+          const xsessions = await response2.json();
+
+          var iokay = 0  ;
+          // 列出所有session白名單
+          xsessions.forEach(xsession => {
+              if (xsession.username == sessionStorage.getItem('username') && xsession.password == sessionStorage.getItem('password') ) {
+                  iokay = iokay + 1;  // 如果iokay = 1 , 就可以顯示 刪除按鈕
+              }  
+          }); //   xsessions.forEach(xsession =>
+
+          //if ( iokay == 0 ) {alert("NO!!!");}   在 forEach之外，iokay 依然有效。
+          if ( iokay > 0 ) {
+              document.getElementById('eventnew').style.display = 'block' ;
+              document.getElementById('eventdelth').style.display = 'block' ;
+          }                 
+          
+          //-----------------------------------------------------------------------------------------
+        } catch (error) {
+          console.error("載入資料時出錯：", error);
+          alert("無法載入資料，請稍後再試。");
+      } // try                             
+  } //async function loadRecords()
+</script>
 
   <style>
     .container {
@@ -239,7 +279,7 @@
       </div>
 
       <div class="event-container">
-        <div class="form-container">
+        <div class="form-container" id="eventnew"   style="display:none;" >
           <!-- 活動新增表單 -->
           <form id="eventForm">
             <h2>新增活動</h2>
@@ -277,7 +317,7 @@
               <tr>
                 <th>活動名稱</th>
                 <th>活動日期</th>
-                <th>操作</th>
+                <th id='eventdelth' style='display:none;'>操作</th>
               </tr>
             </thead>
             <tbody id="eventsTableBody">
