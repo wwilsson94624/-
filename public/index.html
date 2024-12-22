@@ -21,12 +21,14 @@
   <main>
     <section class="carousel">
       <button class="prev">上一張</button>
-      <div id="carouselContainer">
+      <div id="carouselContainer" class="carousel-track">
         <!-- 這裡動態插入圖片 -->
       </div>
       <button class="next">下一張</button>
     </section>
-    <section id="fotoedit"><button id="manage-photos-button">照片編輯</button></section>
+    <section id="fotoedit">
+      <button id="manage-photos-button">照片編輯</button>
+    </section>
     <div class="card-container">
       <!-- 學會介紹卡片 -->
       <div class="card">
@@ -284,56 +286,45 @@
     } //async function loadRecords()
 
 
-    // 設定圖片輪播功能
     let currentIndex = 0;
     const prevButton = document.querySelector(".carousel .prev");
     const nextButton = document.querySelector(".carousel .next");
     const carouselContainer = document.getElementById("carouselContainer");
 
-    // 載入圖片並顯示輪播
-    fetch('/api/images')  // 從後端獲取圖片列表
+    function showImage(index) {
+      const images = carouselContainer.querySelectorAll("img");
+      const totalWidth = carouselContainer.offsetWidth; // 總寬度
+      currentIndex = (index + images.length) % images.length; // 確保索引範圍
+      carouselContainer.style.transform = `translateX(-${currentIndex * totalWidth}px)`;
+    }
+
+    // 初始化圖片與按鈕
+    fetch('/api/images')
       .then(response => response.json())
       .then(data => {
         if (data.length > 0) {
-          data.forEach((photo, index) => {
+          data.forEach((photo) => {
             const imgElement = document.createElement("img");
-            imgElement.src = photo;  // 設定圖片來源
-            imgElement.alt = `活動照片 ${index + 1}`;
-            if (index === 0) imgElement.classList.add("active");  // 設定第一張為顯示圖片
+            imgElement.src = photo;
+            imgElement.alt = "圖片";
             carouselContainer.appendChild(imgElement);
           });
 
-          // 更新輪播顯示的圖片
-          function showImage(index) {
-            const images = carouselContainer.querySelectorAll("img");
-            images[currentIndex].classList.remove("active");  // 隱藏當前圖片
-            currentIndex = (index + images.length) % images.length;  // 確保索引不會超出範圍
-            images[currentIndex].classList.add("active");  // 顯示新圖片
-          }
+          prevButton.style.display = "block";
+          nextButton.style.display = "block";
 
-          function showNextImage() {
-            showImage(currentIndex + 1); // 顯示下一張圖片
-          }
-
-          function showPrevImage() {
-            showImage(currentIndex - 1); // 顯示上一張圖片
-          }
-
-          setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
-          prevButton.addEventListener("click", showPrevImage);  // 點擊左按鈕顯示上一張
-          nextButton.addEventListener("click", showNextImage);  // 點擊右按鈕顯示下一張
-
-          setInterval(showNextImage, 10000); // 每 10 秒切換一張圖片
+          // 綁定按鈕點擊事件
+          prevButton.addEventListener("click", () => showImage(currentIndex - 1));
+          nextButton.addEventListener("click", () => showImage(currentIndex + 1));
         }
       })
-      .catch(error => {
-        console.error("無法加載圖片", error);
-      });
+      .catch(error => console.error("圖片加載失敗", error));
 
-    // 照片管理按鈕
-    document.getElementById("manage-photos-button").addEventListener("click", () => {
-      window.location.href = "photo-manage.html"; // 跳轉至照片管理頁面
-    });
+
+        // 照片管理按鈕
+        document.getElementById("manage-photos-button").addEventListener("click", () => {
+          window.location.href = "photo-manage.html"; // 跳轉至照片管理頁面
+        });
   </script>
 
   <footer>
