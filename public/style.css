@@ -20,6 +20,11 @@ header img {
   height: 50px; /* 設定 LOGO 的高度為 50px */
   margin-left: 10px;
 }
+
+.index:hover {
+  animation: flash 1s ease-in-out infinite; /* 閃爍動畫，持續時間 1 秒，無限循環 */
+}
+
 header h1 a {
   color: white; /* 設定連結文字顏色為白色 */
   text-decoration: none; /* 移除文字底線 */
@@ -222,4 +227,16 @@ footer a {
   max-width: 100%; /* 使圖片最大寬度不超過其父元素寬度 */
   max-height: 300px; /* 設定最大高度為 300px */
   object-fit: contain; /* 使圖片自適應縮放，保持原比例 */
+}
+
+@keyframes flash {
+  0% {
+    filter: brightness(1) hue-rotate(0deg);
+  }
+  50% {
+    filter: brightness(2) hue-rotate(180deg); /* 顏色變化 */
+  }
+  100% {
+    filter: brightness(1) hue-rotate(360deg);
+  }
 }
