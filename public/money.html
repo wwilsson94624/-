@@ -1,27 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>系學會財務管理</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
         main {
             display: flex;
             padding: 20px;
             gap: 20px;
+            flex: 1;
         }
 
         .table-section {
-            flex: 3; /* 左側 60% */
+            flex: 3;
+            /* 左側 60% */
         }
 
         .form-section {
-            flex: 2; /* 右側 40% */
+            flex: 2;
+            /* 右側 40% */
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 20px;
-            background-color: #f7f7f7; /* 淺藍色背景 */
+            background-color: #f7f7f7;
+            /* 淺藍色背景 */
         }
 
         .form-section label {
@@ -29,7 +45,8 @@
             margin-bottom: 5px;
         }
 
-        .form-section input, .form-section select {
+        .form-section input,
+        .form-section select {
             margin-bottom: 10px;
             padding: 5px;
             width: 100%;
@@ -54,7 +71,8 @@
             border-collapse: collapse;
         }
 
-        table th, table td {
+        table th,
+        table td {
             padding: 10px;
             text-align: left;
             border: 1px solid #ddd;
@@ -65,11 +83,13 @@
         }
 
         table tr:nth-child(odd) {
-            background-color: #e3f2fd; /* 淺藍色背景 */
+            background-color: #e3f2fd;
+            /* 淺藍色背景 */
         }
 
         table tr:nth-child(even) {
-            background-color: #ffffff; /* 白色背景 */
+            background-color: #ffffff;
+            /* 白色背景 */
         }
 
         .delete-btn {
@@ -85,8 +105,12 @@
             background-color: #ff1a1a;
         }
 
+        footer {
+            text-align: center;
+        }
     </style>
 </head>
+
 <body>
     <header>
         <img src="picture/ntoulogo.png" alt="海洋大學 LOGO">
@@ -118,23 +142,23 @@
         </section>
 
         <!-- 右側：表單 -->
-        <section class="form-section" id="newadd"  style="display:none;">
+        <section class="form-section" id="newadd" style="display:none;">
             <h2>新增紀錄</h2>
             <label for="date">時間：</label>
             <input type="date" id="date">
-            
+
             <label for="item">品項：</label>
             <input type="text" id="item" placeholder="請輸入品項">
-            
+
             <label for="amount">金額：</label>
             <input type="number" id="amount" placeholder="請輸入金額">
-            
+
             <label for="type">類型：</label>
             <select id="type">
                 <option value="income">收入</option>
                 <option value="expense">支出</option>
             </select>
-            
+
             <button id="add-btn">新增數據</button>
         </section>
     </main>
@@ -203,8 +227,8 @@
             }
         }
 
-                // 加載所有紀錄
-                async function loadRecords() {
+        // 加載所有紀錄
+        async function loadRecords() {
             try {
                 //-------------------------------------session 判斷----------------------------------------------------
                 const response2 = await fetch('http://localhost:3000/api/xsessions');
@@ -212,23 +236,23 @@
 
                 const xsessions = await response2.json();
 
-                var iokay = 0  ;
+                var iokay = 0;
                 // 列出所有session白名單
                 xsessions.forEach(xsession => {
 
-                    if (xsession.username == sessionStorage.getItem('username') && xsession.password == sessionStorage.getItem('password') ) {
+                    if (xsession.username == sessionStorage.getItem('username') && xsession.password == sessionStorage.getItem('password')) {
                         iokay = iokay + 1;  // 如果iokay = 1 , 就可以顯示 刪除按鈕
-                    }  
+                    }
 
                 }); //   xsessions.forEach(xsession =>
-                
+
                 //if ( iokay == 0 ) {alert("NO!!!");}   在 forEach之外，iokay 依然有效。
-                
+
                 //-----------------------------------以下 財務系統 ------------------------------------------------------
 
                 const response = await fetch('http://localhost:3000/api/records');
                 if (!response.ok) throw new Error(`伺服器回應錯誤，狀態碼：${response.status}`);
-                
+
                 const records = await response.json();
 
                 // 清空表格
@@ -250,7 +274,7 @@
                         <td>${balance.toFixed(2)}</td>
                     `;
 
-                    if ( iokay > 0 ) {
+                    if (iokay > 0) {
                         row.innerHTML = row.innerHTML + `<td><button class="delete-btn" data-id="${record.id}">刪除</button></td>`;
 
                         // 添加刪除按鈕的事件
@@ -260,9 +284,9 @@
                     tableBody.appendChild(row);
                 }); //   records.forEach(record => 
 
-                if ( iokay > 0 ) {
-                    document.getElementById('newadd').style.display = 'block' ;
-                    document.getElementById('th4operate').style.display = 'block' ;
+                if (iokay > 0) {
+                    document.getElementById('newadd').style.display = 'block';
+                    document.getElementById('th4operate').style.display = 'block';
                 }
 
             } catch (error) {
@@ -271,11 +295,12 @@
             } // try
 
 
-                                 
+
         } //async function loadRecords()
     </script>
     <footer>
         <p>&copy; 2024 海大資工系學會. All Rights Reserved.</p>
     </footer>
 </body>
+
 </html>
