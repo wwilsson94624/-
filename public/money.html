@@ -274,15 +274,15 @@
                         <td>${balance.toFixed(2)}</td>
                     `;
 
-                    if (iokay > 0) {
+                    tableBody.appendChild(row);
+                }); //   records.forEach(record => 
+
+                if (iokay > 0) {
                         row.innerHTML = row.innerHTML + `<td><button class="delete-btn" data-id="${record.id}">刪除</button></td>`;
 
                         // 添加刪除按鈕的事件
                         row.querySelector('.delete-btn').addEventListener('click', () => deleteRecord(record.id));
-                    } // if iokay 
-
-                    tableBody.appendChild(row);
-                }); //   records.forEach(record => 
+                } // if iokay 
 
                 if (iokay > 0) {
                     document.getElementById('newadd').style.display = 'block';
